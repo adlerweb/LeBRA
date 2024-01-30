@@ -71,11 +71,11 @@ class LebraRequestHandler(BaseHTTPRequestHandler):
         html_content = f"""
             <html>
                 <head>
-                    <title>LeBRA - Legacy Bardocde Reader Application</title>
+                    <title>LeBRA - Legacy Barcode Reader Application</title>
                     <style>font-size: 300%;</style>
                 </head>
                 <body onload="var input = document.getElementById('barcode').focus();">
-                    <h1>LeBRA - Legacy Bardocde Reader Application</h1>
+                    <h1>LeBRA - Legacy Barcode Reader Application</h1>
                     <form action="/submit" method="post">
                         <label for="barcode">Barcode:</label>
                         <input type="text" id="barcode" name="barcode" autofocus>
