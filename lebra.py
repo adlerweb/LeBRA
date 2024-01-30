@@ -2,21 +2,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
 import sys
-import subprocess
+import keyboard
 import html
 
-def is_xdotool_installed():
+def emulate_key_presses(text):
     try:
-        subprocess.run(["xdotool", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        return True
-    except FileNotFoundError:
-        return False
-    except subprocess.CalledProcessError:
-        return False
-
-def emulate_key_press(key):
-    try:
-        subprocess.run(["xdotool", "key", key])
+        keyboard.write(text)
     except Exception as e:
         print(f"Error: {e}")
 
@@ -50,8 +41,7 @@ class  lebraRequestHandler(BaseHTTPRequestHandler):
             barcodeHTML = html.escape(barcode)
             print(f"Scanned: {barcode}")
             
-            for char in barcode:
-                emulate_key_press(char)
+            emulate_key_presses(barcode)
 
             message = f'<div style="background-color:#060; color: white;">Success - Scanned {barcodeHTML}</div>'
         else:
@@ -88,10 +78,6 @@ class  lebraRequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     port = 8998
     server_address = ('', port)
-    
-    if not is_xdotool_installed():
-        print("Can not find xdotool. Please install or check PATH")
-        sys.exit(1)
 
     with HTTPServer(server_address,  lebraRequestHandler) as httpd:
         print(f'Starting server on port {port}...')
