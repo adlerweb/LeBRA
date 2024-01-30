@@ -1,14 +1,18 @@
 import os
 import sys
 import html
+import argparse
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pynput.keyboard import Controller
+from pynput.keyboard import Key, Controller
 from datetime import datetime
 
 def emulate_key_presses(text):
     try:
         keyboard.type(text)
+        if args.enter:
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
     except Exception as e:
         print(f"Error: {e}")
 
@@ -78,11 +82,19 @@ class  lebraRequestHandler(BaseHTTPRequestHandler):
         return html_content
 
 if __name__ == '__main__':
-    port = 8998
-    server_address = ('', port)
+    parser = argparse.ArgumentParser(description='Emulate keyboard input')
+    parser.add_argument('-e', '--enter', action='store_true', help='Press and release the Enter key after typing')
+    parser.add_argument('-l', '--listen', default='', metavar="IP-ADDRESS", help='Specify the listen address. Listen on all addresses if not specified.')
+
+    parser.add_argument('-p', '--port', type=int, default=8998, help='Specify the port number for HTTP server (default: 8998)')
+
+
+    args = parser.parse_args()
+    
+    server_address = (args.listen, args.port)
     
     keyboard = Controller()
 
     with HTTPServer(server_address,  lebraRequestHandler) as httpd:
-        print(f'Starting server on port {port}...')
+        print(f'Starting server on {args.listen}:{args.port}...')
         httpd.serve_forever()
