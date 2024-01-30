@@ -2,12 +2,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
 import sys
-import keyboard
+from pynput.keyboard import Controller
 import html
 
 def emulate_key_presses(text):
     try:
-        keyboard.write(text)
+        keyboard.type(text)
     except Exception as e:
         print(f"Error: {e}")
 
@@ -78,6 +78,8 @@ class  lebraRequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     port = 8998
     server_address = ('', port)
+    
+    keyboard = Controller()
 
     with HTTPServer(server_address,  lebraRequestHandler) as httpd:
         print(f'Starting server on port {port}...')
