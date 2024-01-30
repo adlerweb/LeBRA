@@ -1,9 +1,10 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import urllib.parse
 import os
 import sys
-from pynput.keyboard import Controller
 import html
+import urllib.parse
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pynput.keyboard import Controller
+from datetime import datetime
 
 def emulate_key_presses(text):
     try:
@@ -39,11 +40,12 @@ class  lebraRequestHandler(BaseHTTPRequestHandler):
         if 'barcode' in parsed_data:
             barcode = parsed_data['barcode'][0]
             barcodeHTML = html.escape(barcode)
-            print(f"Scanned: {barcode}")
+            curdt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"Scanned: {barcode} at {curdt}")
             
             emulate_key_presses(barcode)
 
-            message = f'<div style="background-color:#060; color: white;">Success - Scanned {barcodeHTML}</div>'
+            message = f'<div style="background-color:#060; color: white;">Success - Scanned {barcodeHTML} at {curdt}</div>'
         else:
             message = '<div style="background-color:#600; color: white;">ERROR</div>'
             
