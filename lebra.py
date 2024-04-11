@@ -13,9 +13,13 @@ def emulate_key_presses(text):
     """Send supplied text as key presses"""
     try:
         keyboard.type(text)
+        if args.tabulator:
+            keyboard.press(Key.tab)
+            keyboard.release(Key.tab)
         if args.enter:
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
+
     except Exception as error:
         print(f"Error: {error}")
 
@@ -90,6 +94,8 @@ class LebraRequestHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Emulate keyboard input')
+    parser.add_argument('-t', '--tabulator', action='store_true',
+        help='Press and release the Tab key after typing')
     parser.add_argument('-e', '--enter', action='store_true',
         help='Press and release the Enter key after typing')
     parser.add_argument('-l', '--listen', default='', metavar="IP-ADDRESS",
